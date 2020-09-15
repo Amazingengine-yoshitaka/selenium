@@ -1,0 +1,33 @@
+#sudo vi /etc/ssh/sshd_config
+#sudo systemctl restart sshd
+
+#ssh ________@xxx.xxx.xxx.xxx -i ~/.ssh/________ -p 22
+
+curl -fsSL https://get.docker.com/ | sh
+docker --version
+
+sudo gpasswd -a $USER docker
+newgrp docker
+
+#最新版を探す
+## https://github.com/docker/compose/releases
+sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+##GCEでスワップ領域が存在しないことに対する対応 | kisse-logs! http://www.kisse-logs.com/2018/11/29/gce-make-swap/
+sudo dd if=/dev/zero of=/swapfile bs=1M count=8192
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+## 消す。
+pkill --oldest chrome
+
+mount が失敗したら cp を行った方が早そう。
+docker cp ./script/________.py python:/root/script/________.py
+docker exec python ls -al script
+
+## 実行は下記の感じ。
+docker-compose exec python python script/________.py
+## こっちの方が SIMPLE で良いかも。
+docker exec python python script/________.py

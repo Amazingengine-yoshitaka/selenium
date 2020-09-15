@@ -1,0 +1,65 @@
+version: '3'
+services:
+  selenium-hub0:
+    image: selenium/hub
+#    ports:
+#      - 4444:4444
+
+  # chrome-debug:
+  #   image: selenium/node-chrome-debug
+  #   container_name: 'chrome-debug'
+  #   links:
+  #     - selenium-hub:hub
+  #   volumes:
+  #     - /dev/shm:/dev/shm
+  #   ports:
+  #     - 5900:5900
+  #   environment:
+  #     - HUB_HOST=hub
+  chrome0:
+    image: selenium/node-chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub0
+    environment:
+      - HUB_HOST=selenium-hub0
+      - HUB_PORT=4444
+
+  selenium-hub1:
+    image: selenium/hub
+  chrome1:
+    image: selenium/node-chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub1
+    environment:
+      - HUB_HOST=selenium-hub1
+      - HUB_PORT=4444
+
+  selenium-hub2:
+    image: selenium/hub
+  chrome2:
+    image: selenium/node-chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub2
+    environment:
+      - HUB_HOST=selenium-hub2
+      - HUB_PORT=4444
+
+  python:
+    build: './python-selenium'
+    container_name: 'python'
+    depends_on:
+      - selenium-hub0
+      - selenium-hub1
+      - selenium-hub2
+    command: 'tail -f /dev/null'
+    working_dir: '/root'
+    volumes:
+      - ./script:/root/script
+    environment:
+      - TZ=Asia/Tokyo
